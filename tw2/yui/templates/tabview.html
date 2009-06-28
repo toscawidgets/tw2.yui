@@ -1,0 +1,15 @@
+<div xmlns:py="http://genshi.edgewall.org/">
+    <div id="$w.compound_id" class="yui-navset">
+        <ul class="yui-nav">
+            <li py:for="c in w.children" class="${c is w.children[0] and 'selected' or ''}"><a href="#${c.compound_id}:tab">$c.label</a></li>
+        </ul>
+        <div class="yui-content">
+            <div py:for="c in w.children" id="${c.compound_id}:tab">${c.display()}</div>
+        </div>
+    </div>
+    <script>
+    (function() {
+        var tabView = new YAHOO.widget.TabView('$w.compound_id');
+    })();
+    </script>
+</div>

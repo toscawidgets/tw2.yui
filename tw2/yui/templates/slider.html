@@ -1,0 +1,37 @@
+<div>
+
+<div id="${w.compound_id}:bg" class="yui-h-slider" tabindex="-1" title="Slider" style="float:left">
+    <div id="${w.compound_id}:thumb" class="yui-slider-thumb"><img src="$w.resources.thumb.link"/></div>
+</div>
+<input autocomplete="off" id="$w.compound_id" name="$w.compound_id" type="text" value="$w.value" size="4" maxlength="4" style="margin-left: 5px"/>
+
+<script type="text/javascript">
+(function() {
+    var Event = YAHOO.util.Event,
+        Dom   = YAHOO.util.Dom,
+        lang  = YAHOO.lang,
+        slider, textfield = "$w.compound_id";
+    var scaleFactor = ($w.max - $w.min) / $w.size;
+    Event.onDOMReady(function() {
+        slider = YAHOO.widget.Slider.getHorizSlider("${w.compound_id}:bg",
+                         "${w.compound_id}:thumb", 0, $w.size);
+        slider.subscribe("change", function(offsetFromStart) {
+            var actualValue = Math.round($w.min + this.getValue() * scaleFactor);
+            Dom.get(textfield).value = actualValue;
+            Dom.get(bg).title = "slider value = " + actualValue;
+        });
+        slider.setRealValue = function(value, skipAnim) {
+            var v = parseFloat(value, 10);
+            v = (lang.isNumber(v)) ? v : 0;
+            this.setValue(Math.round((v - $w.min)/scaleFactor), skipAnim);
+        }
+        slider.setRealValue(Dom.get(textfield).value, true);
+        // set the value when the 'return' key is detected
+        Event.on(textfield, "keydown", function(e) {
+            if (Event.getCharCode(e) === 13)
+                slider.setRealValue(this.value, false);
+        });
+    });
+})();
+</script>
+</div>

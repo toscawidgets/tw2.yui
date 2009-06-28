@@ -1,0 +1,34 @@
+<div>
+
+<style>
+    #myAutoComplete {
+       width:15em; /* set width here or else widget will expand to fit its container */
+       padding-bottom:2em;
+   }
+</style>
+
+<div id="myAutoComplete">
+    <input id="$w.compound_id" type="text"/>
+    <div id="${w.compound_id}:popup"></div>
+</div>
+
+<script type="text/javascript">
+YAHOO.example.BasicLocal = function() {
+    // Use a LocalDataSource
+    var oDS = new YAHOO.util.LocalDataSource(YAHOO.example.Data.arrayStates);
+    // Optional to define fields for single-dimensional array
+    oDS.responseSchema = {fields : ["state"]};
+
+    // Instantiate the AutoComplete
+    var oAC = new YAHOO.widget.AutoComplete("$w.compound_id", "${w.compound_id}:popup", oDS);
+    oAC.prehighlightClassName = "yui-ac-prehighlight";
+    oAC.useShadow = true;
+
+    return {
+        oDS: oDS,
+        oAC: oAC
+    };
+}();
+</script>
+
+</div>

@@ -3,7 +3,7 @@ import tw2.core as twc, tw2.forms as twf, tw2.yui as twy
 class Index(twf.FormPage):
     title = 'YUI Example'
     attrs = {'class': 'yui-skin-sam'}
-    class child(twy.TabView):
+    class child(twf.TableLayout):
         auto_complete = twy.AutoComplete()
         color_picker = twy.ColorPicker()
         calendar = twy.Calendar()

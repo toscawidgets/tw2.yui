@@ -6,7 +6,7 @@ class Index(twf.FormPage):
     class child(twf.Form):
         class child(twf.TableLayout):
             check = twf.CheckBox(validator=twc.Required)
-            color = twy.Calendar()
+            color = twy.Editor()
 
 if __name__ == '__main__':
     import wsgiref.simple_server as wrs

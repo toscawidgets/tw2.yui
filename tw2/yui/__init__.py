@@ -1,3 +1,5 @@
-from widgets import Slider, TabView, AutoComplete, ColorPicker, Calendar
+from widgets import (Slider, TabView, AutoComplete, ColorPicker, Calendar,
+        Editor)
+
 
 

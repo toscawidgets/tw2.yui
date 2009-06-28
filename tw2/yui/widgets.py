@@ -115,3 +115,20 @@ class Editor(twc.Widget):
     def prepare(self):
         super(Editor, self).prepare()
         self.config = encoder.encode(self.config)
+
+
+class TreeView(twc.Widget):
+    resources = [
+        twc.DirLink(modname=__name__, filename="static/2.7.0/"),
+        twc.CSSLink(modname=__name__, filename="static/2.7.0/fonts/fonts-min.css"),
+        twc.CSSLink(modname=__name__, filename="static/2.7.0/treeview/assets/skins/sam/treeview.css"),
+        twc.JSLink(modname=__name__, filename="static/2.7.0/yahoo-dom-event/yahoo-dom-event.js"),
+        twc.JSLink(modname=__name__, filename="static/2.7.0/treeview/treeview-min.js"),
+    ]
+    template = "genshi:tw2.yui.templates.treeview"
+
+    options = twc.Param('tree options', default=[])
+
+    def prepare(self):
+        super(TreeView, self).prepare()
+        self.options = encoder.encode(self.options)

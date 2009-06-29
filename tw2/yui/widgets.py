@@ -1,13 +1,25 @@
-import tw2.core as twc, tw2.forms as twf, simplejson
+"""
+ToscaWidgets wrappers for Yahoo User Interface (YUI) widgets.
+"""
+import tw2.core as twc, tw2.forms as twf, simplejson, webob
 encoder = simplejson.encoder.JSONEncoder()
 
 
-class Slider(twc.Widget):
+class YuiWidget(twc.Widget):
     resources = [
         twc.DirLink(modname=__name__, filename="static/2.7.0/"),
         twc.CSSLink(modname=__name__, filename="static/2.7.0/fonts/fonts-min.css"),
-        twc.CSSLink(modname=__name__, filename="static/2.7.0/slider/assets/skins/sam/slider.css"),
         twc.JSLink(modname=__name__, filename="static/2.7.0/yahoo-dom-event/yahoo-dom-event.js"),
+    ]
+    options = twc.Param('Configuration options for the widget. See the YUI docs for available options.', default={})
+    def prepare(self):
+        super(YuiWidget, self).prepare()
+        self.options = encoder.encode(self.options)
+
+
+class Slider(YuiWidget):
+    resources = YuiWidget.resources + [
+        twc.CSSLink(modname=__name__, filename="static/2.7.0/slider/assets/skins/sam/slider.css"),
         twc.JSLink(modname=__name__, filename="static/2.7.0/animation/animation-min.js"),
         twc.JSLink(modname=__name__, filename="static/2.7.0/dragdrop/dragdrop-min.js"),
         twc.JSLink(modname=__name__, filename="static/2.7.0/slider/slider-min.js"),
@@ -21,40 +33,48 @@ class Slider(twc.Widget):
 
 
 class TabView(twf.widgets.BaseLayout):
-    resources = [
-        twc.DirLink(modname=__name__, filename="static/2.7.0/"),
-        twc.CSSLink(modname=__name__, filename="static/2.7.0/fonts/fonts-min.css"),
+    resources = YuiWidget.resources + [
         twc.CSSLink(modname=__name__, filename="static/2.7.0/tabview/assets/skins/sam/tabview.css"),
-        twc.JSLink(modname=__name__, filename="static/2.7.0/yahoo-dom-event/yahoo-dom-event.js"),
         twc.JSLink(modname=__name__, filename="static/2.7.0/element/element-min.js"),
         twc.JSLink(modname=__name__, filename="static/2.7.0/tabview/tabview-min.js"),
-        twc.Link(modname=__name__, filename='static/2.7.0/assets/skins/sam/sprite.png'),
     ]
     template = "genshi:tw2.yui.templates.tabview"
 
 
-class AutoComplete(twc.Widget):
-    resources = [
-        twc.DirLink(modname=__name__, filename="static/2.7.0/"),
-        twc.CSSLink(modname=__name__, filename="static/2.7.0/fonts/fonts-min.css"),
+class AutoComplete(YuiWidget):
+    resources = YuiWidget.resources + [
         twc.CSSLink(modname=__name__, filename="static/2.7.0/autocomplete/assets/skins/sam/autocomplete.css"),
-        twc.JSLink(modname=__name__, filename="static/2.7.0/yahoo-dom-event/yahoo-dom-event.js"),
+        twc.JSLink(modname=__name__, filename="static/2.7.0/connection/connection-min.js"),
+        twc.JSLink(modname=__name__, filename="static/2.7.0/json/json-min.js"),
+        twc.JSLink(modname=__name__, filename="static/2.7.0/element/element-min.js"),
         twc.JSLink(modname=__name__, filename="static/2.7.0/animation/animation-min.js"),
         twc.JSLink(modname=__name__, filename="static/2.7.0/datasource/datasource-min.js"),
         twc.JSLink(modname=__name__, filename="static/2.7.0/autocomplete/autocomplete-min.js"),
-
-        twc.JSLink(modname=__name__, filename="static/data.js"), # TBD
     ]
     template = "genshi:tw2.yui.templates.autocomplete"
+    datasrc = twc.Param('DataSource to use')
+
+    @classmethod
+    def post_define(cls):
+        if hasattr(cls, 'datasrc'):
+            cls.datasrc = cls.datasrc(parent=cls, id='datasrc')
 
 
-class ColorPicker(twc.Widget):
-    resources = [
-        twc.DirLink(modname=__name__, filename="static/2.7.0/"),
-        twc.CSSLink(modname=__name__, filename="static/2.7.0/slider/assets/skins/sam/slider.css"),
-        twc.CSSLink(modname=__name__, filename="static/2.7.0/fonts/fonts-min.css"),
+class DataSource(YuiWidget):
+    # TBD: resources
+    template = "genshi:tw2.yui.templates.datasource"
+
+    @classmethod
+    def request(self, req):
+        resp = webob.Response(request=req, content_type="text/plain; charset=UTF8")
+        x = self.ajax_request(req)
+        resp.body = x
+        return resp
+
+
+class ColorPicker(YuiWidget):
+    resources = YuiWidget.resources + [
         twc.CSSLink(modname=__name__, filename="static/2.7.0/colorpicker/assets/skins/sam/colorpicker.css"),
-        twc.JSLink(modname=__name__, filename="static/2.7.0/yahoo-dom-event/yahoo-dom-event.js"),
         twc.JSLink(modname=__name__, filename="static/2.7.0/dragdrop/dragdrop-min.js"),
         twc.JSLink(modname=__name__, filename="static/2.7.0/animation/animation-min.js"),
         twc.JSLink(modname=__name__, filename="static/2.7.0/slider/slider-min.js"),
@@ -63,44 +83,29 @@ class ColorPicker(twc.Widget):
     ]
     template = "genshi:tw2.yui.templates.colorpicker"
 
-    config = twc.Param('config - see yui docs', default={})
-
     def prepare(self):
-        super(ColorPicker, self).prepare()
-        self.safe_modify('config')
-        self.config['images'] = {
+        self.safe_modify('options')
+        self.options['images'] = {
             'PICKER_THUMB': "/resources/tw2.yui.widgets/static/2.7.0/colorpicker/assets/picker_thumb.png",
             'HUE_THUMB': "/resources/tw2.yui.widgets/static/2.7.0/colorpicker/assets/hue_thumb.png"
         }
-        self.config = encoder.encode(self.config)
+        super(ColorPicker, self).prepare()
 
 
-class Calendar(twc.Widget):
-    resources = [
-        twc.DirLink(modname=__name__, filename="static/2.7.0/"),
-        twc.CSSLink(modname=__name__, filename="static/2.7.0/fonts/fonts-min.css"),
+class Calendar(YuiWidget):
+    resources = YuiWidget.resources + [
         twc.CSSLink(modname=__name__, filename="static/2.7.0/calendar/assets/skins/sam/calendar.css"),
-        twc.JSLink(modname=__name__, filename="static/2.7.0/yahoo-dom-event/yahoo-dom-event.js"),
         twc.JSLink(modname=__name__, filename="static/2.7.0/calendar/calendar-min.js"),
     ]
     template = "genshi:tw2.yui.templates.calendar"
 
-    config = twc.Param('config - see yui docs', default={})
 
-    def prepare(self):
-        super(Calendar, self).prepare()
-        self.config = encoder.encode(self.config)
-
-
-class Editor(twc.Widget):
-    resources = [
-        twc.DirLink(modname=__name__, filename="static/2.7.0/"),
+class Editor(twf.TextArea, YuiWidget):
+    resources = YuiWidget.resources + [
         twc.CSSLink(modname=__name__, filename="static/2.7.0/menu/assets/skins/sam/menu.css"),
         twc.CSSLink(modname=__name__, filename="static/2.7.0/button/assets/skins/sam/button.css"),
-        twc.CSSLink(modname=__name__, filename="static/2.7.0/fonts/fonts-min.css"),
         twc.CSSLink(modname=__name__, filename="static/2.7.0/container/assets/skins/sam/container.css"),
         twc.CSSLink(modname=__name__, filename="static/2.7.0/editor/assets/skins/sam/editor.css"),
-        twc.JSLink(modname=__name__, filename="static/2.7.0/yahoo-dom-event/yahoo-dom-event.js"),
         twc.JSLink(modname=__name__, filename="static/2.7.0/animation/animation-min.js"),
         twc.JSLink(modname=__name__, filename="static/2.7.0/element/element-min.js"),
         twc.JSLink(modname=__name__, filename="static/2.7.0/container/container-min.js"),
@@ -110,25 +115,14 @@ class Editor(twc.Widget):
     ]
     template = "genshi:tw2.yui.templates.editor"
 
-    config = twc.Param('config - see yui docs', default={})
-
-    def prepare(self):
-        super(Editor, self).prepare()
-        self.config = encoder.encode(self.config)
+    # default to a fairly large size
+    rows = 20
+    cols = 75
 
 
-class TreeView(twc.Widget):
-    resources = [
-        twc.DirLink(modname=__name__, filename="static/2.7.0/"),
-        twc.CSSLink(modname=__name__, filename="static/2.7.0/fonts/fonts-min.css"),
+class TreeView(YuiWidget):
+    resources = YuiWidget.resources + [
         twc.CSSLink(modname=__name__, filename="static/2.7.0/treeview/assets/skins/sam/treeview.css"),
-        twc.JSLink(modname=__name__, filename="static/2.7.0/yahoo-dom-event/yahoo-dom-event.js"),
         twc.JSLink(modname=__name__, filename="static/2.7.0/treeview/treeview-min.js"),
     ]
     template = "genshi:tw2.yui.templates.treeview"
-
-    options = twc.Param('tree options', default=[])
-
-    def prepare(self):
-        super(TreeView, self).prepare()
-        self.options = encoder.encode(self.options)

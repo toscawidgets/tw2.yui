@@ -1,9 +1,8 @@
-<div>
-<textarea id="$w.compound_id" name="$w.compound_id" rows="20" cols="75">
-</textarea>
+<div xmlns:py="http://genshi.edgewall.org/">
+<textarea py:attrs="w.attrs"></textarea>
 <script type="text/javascript">
     YAHOO.util.Event.onDOMReady(function() {
-        var myEditor = new YAHOO.widget.Editor('$w.compound_id', $w.config);
+        var myEditor = new YAHOO.widget.Editor('$w.compound_id', $w.options);
         myEditor.render();
     });
 </script>

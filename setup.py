@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='',
+    name='tw2.yui',
     version='',
     description='',
     author='',

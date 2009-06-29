@@ -1,1 +1,2 @@
 glob:*.pyc
+glob:tw2.yui.egg-info

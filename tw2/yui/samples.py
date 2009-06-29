@@ -8,7 +8,3 @@ See http://toscawidgets.org/documentation/WidgetBrowser for more information
 
 import widgets
 
-class DemoYui(widgets.Yui):
-    # Provide default parameters, value, etc... here
-    # default = <some-default-value>
-    pass

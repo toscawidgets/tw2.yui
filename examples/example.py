@@ -4,10 +4,14 @@ class Index(twf.FormPage):
     title = 'YUI Example'
     attrs = {'class': 'yui-skin-sam'}
     class child(twf.TableLayout):
-        auto_complete = twy.AutoComplete()
+#        auto_complete = twy.AutoComplete()
         color_picker = twy.ColorPicker()
         calendar = twy.Calendar()
         slider = twy.Slider()
+        editor = twy.Editor()
+        class tabview(twy.TabView):
+            tab1 = twf.Label(label='Tab 1', text='This is the first tab')
+            tab2 = twf.Label(label='Tab 2', text='And this is the other tab')
 
 if __name__ == '__main__':
     import wsgiref.simple_server as wrs

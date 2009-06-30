@@ -1,21 +1,12 @@
-<div>
+<div xmlns:py="http://genshi.edgewall.org/">
 
-<style>
-    .yui-autocomplete {
-       width:15em; /* set width here or else widget will expand to fit its container */
-       padding-bottom:2em;
-   }
-</style>
-
-<div class="yui-autocomplete">
-    <input id="$w.compound_id" type="text"/>
-    <div id="${w.compound_id}:popup"></div>
-</div>
+<input py:attrs="w.attrs"/>
+<div id="${w.compound_id}:popup"></div>
 
 ${w.datasrc.display()}
 
 <script type="text/javascript">
-    var oAC = new YAHOO.widget.AutoComplete("$w.compound_id", "${w.compound_id}:popup", tw2_yui_datasources["$w.datasrc.compound_id"], $w.config);
+    var oAC = new YAHOO.widget.AutoComplete("$w.compound_id", "${w.compound_id}:popup", tw2_yui_datasources["$w.datasrc.compound_id"], $w.options);
 </script>
 
 </div>

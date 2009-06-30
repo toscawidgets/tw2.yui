@@ -1,9 +1,5 @@
 <script type="text/javascript">
     tw2_yui_datasources = {}; // TBD: only if undefined
-    var oDS = new YAHOO.util.XHRDataSource("/$w.compound_id", {
-                responseType: YAHOO.util.XHRDataSource.TYPE_JSON,
-                responseSchema: {resultsList:'results.items',
-                                 fields: ['title'],}}
-                                 );
+    var oDS = new YAHOO.util.XHRDataSource("/$w.compound_id", $w.options);
     tw2_yui_datasources["$w.compound_id"] = oDS;
 </script>

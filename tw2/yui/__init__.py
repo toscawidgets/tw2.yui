@@ -1,2 +1,2 @@
 from widgets import (Slider, TabView, AutoComplete, ColorPicker, Calendar,
-        Editor, TreeView, DataSource, LogReader)
+        Editor, TreeView, XHRDataSource, LocalDataSource, LogReader)

@@ -1,4 +1,4 @@
-import widgets as twy, tw2.forms as twf
+import widgets as twy, tw2.forms as twf, tw2.core as twc
 
 page_options = {'css_class': 'yui-skin-sam'}
 
@@ -15,3 +15,11 @@ class DemoTreeView(twy.TreeView):
 
 class DemoEditor(twy.Editor):
     rows = 5
+
+class DemoAutoComplete(twy.AutoComplete):
+    class datasrc(twy.LocalDataSource):
+        resources = twy.DataSource.resources + [
+            twc.JSLink(modname=__name__, filename="static/sample-data.js"),
+        ]
+        data = 'YAHOO.example.Data.arrayStates'
+        responseSchema = {'fields ': ["state"]};

@@ -79,21 +79,29 @@ class DataSource(YuiWidget):
         twc.JSLink(modname=__name__, filename="static/2.7.0/datasource/datasource-min.js"),
     ]
     responseSchema = twc.Param('TBD', default={'resultsList':'result'})
-    template = "genshi:tw2.yui.templates.datasource"
-    options = {
-        'responseType': 3, # YAHOO.util.XHRDataSource.TYPE_JSON
-    }
 
     def prepare(self):
         self.safe_modify('options')
         self.options['responseSchema'] = self.responseSchema
         super(DataSource, self).prepare()
 
+
+class XHRDataSource(DataSource):
+    template = "genshi:tw2.yui.templates.xhrdatasource"
+    options = {
+        'responseType': 3, # YAHOO.util.XHRDataSource.TYPE_JSON
+    }
+
     @classmethod
     def request(self, req):
         resp = webob.Response(request=req, content_type="text/plain; charset=UTF8")
         resp.body = encoder.encode(self.ajax_request(req))
         return resp
+
+
+class LocalDataSource(DataSource):
+    template = "genshi:tw2.yui.templates.localdatasource"
+    data = twc.Param('Name of the JavaScript array to use as the data source')
 
 
 class ColorPicker(YuiWidget):

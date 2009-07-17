@@ -1,6 +1,6 @@
 import tw2.core as twc, tw2.forms as twf, tw2.yui as twy
 
-class MyDataSource(twy.DataSource):
+class MyDataSource(twy.XHRDataSource):
     @classmethod
     def ajax_request(self, req):
         return {'result': ['a','b','c']}

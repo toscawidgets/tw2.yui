@@ -6,8 +6,8 @@ class MyDataSource(twy.DataSource):
         return {'result': ['a','b','c']}
 
 class Index(twf.FormPage):
-    title = "YUI AutoComplete"
-    attrs = {"class": "yui-skin-sam"}
+    title = 'YUI AutoComplete'
+    css_class = 'yui-skin-sam'
     class child(twf.TableForm):
         paj = twy.AutoComplete(datasrc=MyDataSource())
         fred = twy.LogReader()

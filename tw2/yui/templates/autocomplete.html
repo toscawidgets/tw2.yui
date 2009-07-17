@@ -1,12 +1,10 @@
 <div xmlns:py="http://genshi.edgewall.org/">
-
-<input py:attrs="w.attrs"/>
-<div id="${w.compound_id}:popup"></div>
-
+<div class="yui-autocomplete">
+    <input py:attrs="w.attrs"/>
+    <div id="${w.compound_id}:popup"></div>
+</div>
 ${w.datasrc.display()}
-
 <script type="text/javascript">
-    var oAC = new YAHOO.widget.AutoComplete("$w.compound_id", "${w.compound_id}:popup", tw2_yui_datasources["$w.datasrc.compound_id"], $w.options);
+    new YAHOO.widget.AutoComplete("$w.compound_id", "${w.compound_id}:popup", tw2_yui_datasources["$w.datasrc.compound_id"], $w.options);
 </script>
-
 </div>

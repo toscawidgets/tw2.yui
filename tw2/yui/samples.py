@@ -1,10 +1,17 @@
-"""
-Here you can create samples of your widgets by providing default parameters,
-inserting them in a container widget, mixing them with other widgets, etc...
-These samples will appear in the WidgetBrowser
+import widgets as twy, tw2.forms as twf
 
-See http://toscawidgets.org/documentation/WidgetBrowser for more information
-"""
+page_options = {'css_class': 'yui-skin-sam'}
 
-import widgets
+class DemoTabView(twy.TabView):
+    tab1 = twf.Label(label='Tab 1', text='This is the first tab')
+    tab2 = twf.Label(label='Tab 2', text='And this is the other tab')
 
+class DemoTreeView(twy.TreeView):
+    content = [
+        {'type':'Text', 'label':'Label 1', 'children':['Sub label %d' % i for i in range(1,11)]},
+        {'type':'Text', 'label':'Label 2', 'children':['Sub label %d' % i for i in range(1,11)]},
+        {'type':'Text', 'label':'Label 3', 'children':['Sub label %d' % i for i in range(1,11)]},
+    ]
+
+class DemoEditor(twy.Editor):
+    rows = 5

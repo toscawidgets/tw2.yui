@@ -14,9 +14,7 @@ class YuiWidget(twc.Widget):
     options = twc.Param('Configuration options for the widget. See the YUI docs for available options.', default={})
     def prepare(self):
         super(YuiWidget, self).prepare()
-        print 123, self.options
         self.options = encoder.encode(self.options)
-        print 124, self.options
 
 
 class Slider(YuiWidget):
@@ -41,6 +39,10 @@ class TabView(twf.widgets.BaseLayout):
         twc.JSLink(modname=__name__, filename="static/2.7.0/tabview/tabview-min.js"),
     ]
     template = "genshi:tw2.yui.templates.tabview"
+    # These don't apply; hide from widget browser
+    hover_help = twc.Variable()
+    help_text = twc.Variable()
+    container_attrs = twc.Variable()
 
 
 class AutoComplete(twf.TextField, YuiWidget):
@@ -62,6 +64,14 @@ class AutoComplete(twf.TextField, YuiWidget):
         if hasattr(cls, 'datasrc'):
             cls.datasrc = cls.datasrc(parent=cls, id='datasrc')
 
+    def __init__(self, **kw):
+        super(AutoComplete, self).__init__(**kw)
+        self.datasrc = self.datasrc.req()
+
+    def prepare(self):
+        super(AutoComplete, self).prepare()
+        self.datasrc.prepare()
+
 
 class DataSource(YuiWidget):
     resources = [ # don't use YuiWidget.resources
@@ -69,13 +79,13 @@ class DataSource(YuiWidget):
     ]
     responseSchema = twc.Param('TBD', default={'resultsList':'result'})
     template = "genshi:tw2.yui.templates.datasource"
-    #options = {
-    #    'responseType': 3, # YAHOO.util.XHRDataSource.TYPE_JSON
-    #}
+    options = {
+        'responseType': 3, # YAHOO.util.XHRDataSource.TYPE_JSON
+    }
 
     def prepare(self):
         self.safe_modify('options')
-        self.options['responseSchema'] = 'fred'
+        self.options['responseSchema'] = self.responseSchema
         super(DataSource, self).prepare()
 
     @classmethod

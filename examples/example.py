@@ -16,10 +16,10 @@ class Index(twf.FormPage):
         calendar = twy.Calendar()
         slider = twy.Slider()
         editor = twy.Editor()
-        class tabview(twy.TabView):
+        class tab_view(twy.TabView):
             tab1 = twf.Label(label='Tab 1', text='This is the first tab')
             tab2 = twf.Label(label='Tab 2', text='And this is the other tab')
-        class treeview(twy.TreeView):
+        class tree_view(twy.TreeView):
             content = [
                 {'type':'Text', 'label':'Label 1', 'children':['Sub label %d' % i for i in range(1,11)]},
                 {'type':'Text', 'label':'Label 2', 'children':['Sub label %d' % i for i in range(1,11)]},

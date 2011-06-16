@@ -22,4 +22,4 @@ class DemoAutoComplete(twy.AutoComplete):
             twc.JSLink(modname=__name__, filename="static/sample-data.js"),
         ]
         data = 'YAHOO.example.Data.arrayStates'
-        responseSchema = {'fields ': ["state"]};
+        responseSchema = {'fields': ["state"]};

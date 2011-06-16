@@ -94,7 +94,7 @@ class XHRDataSource(DataSource):
 
     @classmethod
     def request(self, req):
-        resp = webob.Response(request=req, content_type="text/plain; charset=UTF8")
+        resp = webob.Response(request=req, content_type="application/json; charset=UTF8")
         resp.body = encoder.encode(self.ajax_request(req))
         return resp
 

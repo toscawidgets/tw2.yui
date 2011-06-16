@@ -1,2 +1,2 @@
-recursive-include tw/yui/templates *
-recursive-include tw/yui/static *
+recursive-include tw2/yui/templates *
+recursive-include tw2/yui/static *

@@ -148,10 +148,11 @@ class Editor(twf.TextArea, YuiWidget):
         twc.JSLink(modname=__name__, filename="static/2.7.0/editor/editor-min.js"),
     ]
     template = "genshi:tw2.yui.templates.editor"
+    options = {'handleSubmit': 1}
 
     # default to a fairly large size
     rows = 20
-    cols = 75
+    cols = 100
 
 
 class TreeView(YuiWidget):

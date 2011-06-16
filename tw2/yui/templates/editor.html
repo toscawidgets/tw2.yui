@@ -1,8 +1,8 @@
 <div xmlns:py="http://genshi.edgewall.org/">
-<textarea py:attrs="w.attrs"></textarea>
+<textarea py:attrs="w.attrs">$w.value</textarea>
 <script type="text/javascript">
     YAHOO.util.Event.onDOMReady(function() {
-        var myEditor = new YAHOO.widget.Editor('$w.compound_id', $w.options);
+        var myEditor = new YAHOO.widget.SimpleEditor('$w.compound_id', $w.options);
         myEditor.render();
     });
 </script>

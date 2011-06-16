@@ -1,5 +1,4 @@
 <script type="text/javascript">
-    tw2_yui_datasources = {}; // TBD: only if undefined
-    var oDS = new YAHOO.util.XHRDataSource("${w.get_link()}", $w.options);
-    tw2_yui_datasources["$w.compound_id"] = oDS;
+    if(typeof(tw2_yui_datasources) == "undefined") tw2_yui_datasources = {};
+    tw2_yui_datasources["$w.compound_id"] = new YAHOO.util.XHRDataSource("${w.get_link()}", $w.options);
 </script>

@@ -2,11 +2,18 @@
 <style type="text/css">
   .yui-picker { position: relative; padding: 6px; background-color: #eeeeee; width: 420px; height:220px; }
 </style>
-<div id="$w.compound_id" class="yui-picker"></div>
+<div id="$w.compound_id" class="yui-picker"><input type="hidden" id="${w.compound_id}:hex" name="$w.compound_id" value="$w.value"/></div>
 <script type="text/javascript">
     var Event = YAHOO.util.Event;
     Event.onDOMReady(function() {
         picker = new YAHOO.widget.ColorPicker("$w.compound_id", $w.options);
+        picker.setValue($w.rgb, true);
+        picker.on("rgbChange", function(o) {
+            var hex = '#';
+            for(var v in o.newValue)
+                hex += o.newValue[v].toString(16);
+            document.getElementById('${w.compound_id}:hex').value = hex;
+        });        
     });
 </script>
 </div>

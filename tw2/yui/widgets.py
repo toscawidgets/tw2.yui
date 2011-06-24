@@ -1,7 +1,7 @@
 """
 ToscaWidgets wrappers for Yahoo User Interface (YUI) widgets.
 """
-import tw2.core as twc, tw2.forms as twf, simplejson, webob
+import tw2.core as twc, tw2.forms as twf, simplejson, webob, re
 encoder = simplejson.encoder.JSONEncoder()
 
 yui_version = '2.9.0'
@@ -117,9 +117,12 @@ class ColorPicker(YuiWidget):
         twc.Link(id='hue_thumb', modname=__name__, filename="static/"+yui_version+"/colorpicker/assets/hue_thumb.png"),
     ]
     template = "genshi:tw2.yui.templates.colorpicker"
+    rgb = twc.Variable(default='[0xFF,0xFF,0xFF]')
 
     def prepare(self):
         self.safe_modify('options')
+        if self.value and re.match('^#[0-9a-fA-F]{6}$', self.value):
+            self.rgb = encoder.encode([int(self.value[i:i+2], 16) for i in (1, 3, 5)])
         self.options['images'] = {
             'PICKER_THUMB': '/resources/tw2.yui.widgets/static/'+yui_version+'/colorpicker/assets/picker_thumb.png',
             'HUE_THUMB': '/resources/tw2.yui.widgets/static/'+yui_version+'/colorpicker/assets/hue_thumb.png',

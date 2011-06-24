@@ -4,12 +4,13 @@ ToscaWidgets wrappers for Yahoo User Interface (YUI) widgets.
 import tw2.core as twc, tw2.forms as twf, simplejson, webob
 encoder = simplejson.encoder.JSONEncoder()
 
+yui_version = '2.9.0'
 
 class YuiWidget(twc.Widget):
     resources = [
-        twc.DirLink(modname=__name__, filename="static/2.7.0/"),
-        twc.CSSLink(modname=__name__, filename="static/2.7.0/fonts/fonts-min.css"),
-        twc.JSLink(modname=__name__, filename="static/2.7.0/yahoo-dom-event/yahoo-dom-event.js"),
+        twc.DirLink(modname=__name__, filename="static/"+yui_version+"/"),
+        twc.CSSLink(modname=__name__, filename="static/"+yui_version+"/fonts/fonts-min.css"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/yahoo-dom-event/yahoo-dom-event.js"),
     ]
     options = twc.Param('Configuration options for the widget. See the YUI docs for available options.', default={})
     def prepare(self):
@@ -19,11 +20,11 @@ class YuiWidget(twc.Widget):
 
 class Slider(YuiWidget):
     resources = YuiWidget.resources + [
-        twc.CSSLink(modname=__name__, filename="static/2.7.0/slider/assets/skins/sam/slider.css"),
-        twc.JSLink(modname=__name__, filename="static/2.7.0/animation/animation-min.js"),
-        twc.JSLink(modname=__name__, filename="static/2.7.0/dragdrop/dragdrop-min.js"),
-        twc.JSLink(modname=__name__, filename="static/2.7.0/slider/slider-min.js"),
-        twc.Link(id='thumb', modname=__name__, filename='static/2.7.0/slider/assets/thumb-n.gif'),
+        twc.CSSLink(modname=__name__, filename="static/"+yui_version+"/slider/assets/skins/sam/slider.css"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/animation/animation-min.js"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/dragdrop/dragdrop-min.js"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/slider/slider-min.js"),
+        twc.Link(id='thumb', modname=__name__, filename='static/'+yui_version+'/slider/assets/thumb-n.gif'),
     ]
     template = "genshi:tw2.yui.templates.slider"
 
@@ -34,9 +35,9 @@ class Slider(YuiWidget):
 
 class TabView(twf.widgets.BaseLayout):
     resources = YuiWidget.resources + [
-        twc.CSSLink(modname=__name__, filename="static/2.7.0/tabview/assets/skins/sam/tabview.css"),
-        twc.JSLink(modname=__name__, filename="static/2.7.0/element/element-min.js"),
-        twc.JSLink(modname=__name__, filename="static/2.7.0/tabview/tabview-min.js"),
+        twc.CSSLink(modname=__name__, filename="static/"+yui_version+"/tabview/assets/skins/sam/tabview.css"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/element/element-min.js"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/tabview/tabview-min.js"),
     ]
     template = "genshi:tw2.yui.templates.tabview"
     # These don't apply; hide from widget browser
@@ -48,13 +49,13 @@ class TabView(twf.widgets.BaseLayout):
 class AutoComplete(twf.TextField, YuiWidget):
     resources = YuiWidget.resources + [
         twc.CSSLink(modname=__name__, filename="static/yui.css"),
-        twc.CSSLink(modname=__name__, filename="static/2.7.0/autocomplete/assets/skins/sam/autocomplete.css"),
-        twc.JSLink(modname=__name__, filename="static/2.7.0/connection/connection-min.js"),
-        twc.JSLink(modname=__name__, filename="static/2.7.0/json/json-min.js"),
-        twc.JSLink(modname=__name__, filename="static/2.7.0/element/element-min.js"),
-        twc.JSLink(modname=__name__, filename="static/2.7.0/animation/animation-min.js"),
-        twc.JSLink(modname=__name__, filename="static/2.7.0/datasource/datasource-min.js"),
-        twc.JSLink(modname=__name__, filename="static/2.7.0/autocomplete/autocomplete-min.js"),
+        twc.CSSLink(modname=__name__, filename="static/"+yui_version+"/autocomplete/assets/skins/sam/autocomplete.css"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/connection/connection-min.js"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/json/json-min.js"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/element/element-min.js"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/animation/animation-min.js"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/datasource/datasource-min.js"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/autocomplete/autocomplete-min.js"),
     ]
     template = "genshi:tw2.yui.templates.autocomplete"
     attrs = {'style': 'width:15em;'}
@@ -77,7 +78,7 @@ class AutoComplete(twf.TextField, YuiWidget):
 
 class DataSource(YuiWidget):
     resources = [ # don't use YuiWidget.resources
-        twc.JSLink(modname=__name__, filename="static/2.7.0/datasource/datasource-min.js"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/datasource/datasource-min.js"),
     ]
     responseSchema = twc.Param('TBD', default={'resultsList':'result'})
 
@@ -107,46 +108,46 @@ class LocalDataSource(DataSource):
 
 class ColorPicker(YuiWidget):
     resources = YuiWidget.resources + [
-        twc.CSSLink(modname=__name__, filename="static/2.7.0/colorpicker/assets/skins/sam/colorpicker.css"),
-        twc.JSLink(modname=__name__, filename="static/2.7.0/dragdrop/dragdrop-min.js"),
-        twc.JSLink(modname=__name__, filename="static/2.7.0/animation/animation-min.js"),
-        twc.JSLink(modname=__name__, filename="static/2.7.0/slider/slider-min.js"),
-        twc.JSLink(modname=__name__, filename="static/2.7.0/element/element-min.js"),
-        twc.JSLink(modname=__name__, filename="static/2.7.0/colorpicker/colorpicker-min.js"),
-        twc.Link(id='picker_thumb', modname=__name__, filename="static/2.7.0/colorpicker/assets/picker_thumb.png"),
-        twc.Link(id='hue_thumb', modname=__name__, filename="static/2.7.0/colorpicker/assets/hue_thumb.png"),
+        twc.CSSLink(modname=__name__, filename="static/"+yui_version+"/colorpicker/assets/skins/sam/colorpicker.css"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/dragdrop/dragdrop-min.js"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/animation/animation-min.js"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/slider/slider-min.js"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/element/element-min.js"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/colorpicker/colorpicker-min.js"),
+        twc.Link(id='picker_thumb', modname=__name__, filename="static/"+yui_version+"/colorpicker/assets/picker_thumb.png"),
+        twc.Link(id='hue_thumb', modname=__name__, filename="static/"+yui_version+"/colorpicker/assets/hue_thumb.png"),
     ]
     template = "genshi:tw2.yui.templates.colorpicker"
 
     def prepare(self):
         self.safe_modify('options')
         self.options['images'] = {
-            'PICKER_THUMB': '/resources/tw2.yui.widgets/static/2.7.0/colorpicker/assets/picker_thumb.png',
-            'HUE_THUMB': '/resources/tw2.yui.widgets/static/2.7.0/colorpicker/assets/hue_thumb.png',
+            'PICKER_THUMB': '/resources/tw2.yui.widgets/static/'+yui_version+'/colorpicker/assets/picker_thumb.png',
+            'HUE_THUMB': '/resources/tw2.yui.widgets/static/'+yui_version+'/colorpicker/assets/hue_thumb.png',
         }
         super(ColorPicker, self).prepare()
 
 
 class Calendar(YuiWidget):
     resources = YuiWidget.resources + [
-        twc.CSSLink(modname=__name__, filename="static/2.7.0/calendar/assets/skins/sam/calendar.css"),
-        twc.JSLink(modname=__name__, filename="static/2.7.0/calendar/calendar-min.js"),
+        twc.CSSLink(modname=__name__, filename="static/"+yui_version+"/calendar/assets/skins/sam/calendar.css"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/calendar/calendar-min.js"),
     ]
     template = "genshi:tw2.yui.templates.calendar"
 
 
 class Editor(twf.TextArea, YuiWidget):
     resources = YuiWidget.resources + [
-        twc.CSSLink(modname=__name__, filename="static/2.7.0/menu/assets/skins/sam/menu.css"),
-        twc.CSSLink(modname=__name__, filename="static/2.7.0/button/assets/skins/sam/button.css"),
-        twc.CSSLink(modname=__name__, filename="static/2.7.0/container/assets/skins/sam/container.css"),
-        twc.CSSLink(modname=__name__, filename="static/2.7.0/editor/assets/skins/sam/editor.css"),
-        twc.JSLink(modname=__name__, filename="static/2.7.0/animation/animation-min.js"),
-        twc.JSLink(modname=__name__, filename="static/2.7.0/element/element-min.js"),
-        twc.JSLink(modname=__name__, filename="static/2.7.0/container/container-min.js"),
-        twc.JSLink(modname=__name__, filename="static/2.7.0/menu/menu-min.js"),
-        twc.JSLink(modname=__name__, filename="static/2.7.0/button/button-min.js"),
-        twc.JSLink(modname=__name__, filename="static/2.7.0/editor/editor-min.js"),
+        twc.CSSLink(modname=__name__, filename="static/"+yui_version+"/menu/assets/skins/sam/menu.css"),
+        twc.CSSLink(modname=__name__, filename="static/"+yui_version+"/button/assets/skins/sam/button.css"),
+        twc.CSSLink(modname=__name__, filename="static/"+yui_version+"/container/assets/skins/sam/container.css"),
+        twc.CSSLink(modname=__name__, filename="static/"+yui_version+"/editor/assets/skins/sam/editor.css"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/animation/animation-min.js"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/element/element-min.js"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/container/container-min.js"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/menu/menu-min.js"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/button/button-min.js"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/editor/editor-min.js"),
     ]
     template = "genshi:tw2.yui.templates.editor"
     options = {'handleSubmit': 1}
@@ -158,8 +159,8 @@ class Editor(twf.TextArea, YuiWidget):
 
 class TreeView(YuiWidget):
     resources = YuiWidget.resources + [
-        twc.CSSLink(modname=__name__, filename="static/2.7.0/treeview/assets/skins/sam/treeview.css"),
-        twc.JSLink(modname=__name__, filename="static/2.7.0/treeview/treeview-min.js"),
+        twc.CSSLink(modname=__name__, filename="static/"+yui_version+"/treeview/assets/skins/sam/treeview.css"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/treeview/treeview-min.js"),
     ]
     template = "genshi:tw2.yui.templates.treeview"
     content = twc.Param('Content', default=[])
@@ -170,7 +171,7 @@ class TreeView(YuiWidget):
 
 class LogReader(YuiWidget):
     resources = YuiWidget.resources + [
-        twc.CSSLink(modname=__name__, filename="static/2.7.0/logger/assets/skins/sam/logger.css"),
-        twc.JSLink(modname=__name__, filename="static/2.7.0/logger/logger-min.js"),
+        twc.CSSLink(modname=__name__, filename="static/"+yui_version+"/logger/assets/skins/sam/logger.css"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/logger/logger-min.js"),
     ]
     template = "genshi:tw2.yui.templates.logreader"

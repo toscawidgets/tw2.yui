@@ -48,7 +48,6 @@ class TabView(twf.widgets.BaseLayout):
 
 class AutoComplete(twf.TextField, YuiWidget):
     resources = YuiWidget.resources + [
-        twc.CSSLink(modname=__name__, filename="static/yui.css"),
         twc.CSSLink(modname=__name__, filename="static/"+yui_version+"/autocomplete/assets/skins/sam/autocomplete.css"),
         twc.JSLink(modname=__name__, filename="static/"+yui_version+"/connection/connection-min.js"),
         twc.JSLink(modname=__name__, filename="static/"+yui_version+"/json/json-min.js"),

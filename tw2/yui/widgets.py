@@ -59,6 +59,7 @@ class AutoComplete(twf.TextField, YuiWidget):
     template = "genshi:tw2.yui.templates.autocomplete"
     attrs = {'style': 'width:15em;'}
     datasrc = twc.Param('DataSource to use')
+    value = twc.Param(attribute=True)
 
     @classmethod
     def post_define(cls):

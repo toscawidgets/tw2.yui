@@ -23,3 +23,13 @@ class DemoAutoComplete(twy.AutoComplete):
         ]
         data = 'YAHOO.example.Data.arrayStates'
         responseSchema = {'fields': ["state"]};
+
+
+class DemoDataTable(twy.DataTable):
+    id = twy.Column()
+    name = twy.Column()
+    class datasrc(twy.LocalDataSource):
+        resources = twy.DataSource.resources + [
+            twc.JSLink(modname=__name__, filename="static/sample-data.js"),
+        ]
+        data = 'YAHOO.example.Data.accounts'

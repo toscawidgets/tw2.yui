@@ -177,3 +177,46 @@ class LogReader(YuiWidget):
         twc.JSLink(modname=__name__, filename="static/"+yui_version+"/logger/logger-min.js"),
     ]
     template = "genshi:tw2.yui.templates.logreader"
+
+
+class DataTable(YuiWidget, twc.CompoundWidget):
+    resources = YuiWidget.resources + [
+        twc.CSSLink(modname=__name__, filename="static/"+yui_version+"/datatable/assets/skins/sam/datatable.css"),
+        twc.CSSLink(modname=__name__, filename="static/"+yui_version+"/button/assets/skins/sam/button.css"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/dom/dom-min.js"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/event/element-min.js"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/dragdrop/dragdrop-min.js"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/element/element-min.js"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/datasource/datasource-min.js"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/event-delegate/event-delegate-min.js"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/datatable/datatable-min.js"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/button/button-min.js"),
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/connection/connection-min.js"),
+    ]
+    template = "genshi:tw2.yui.templates.datatable"
+    datasrc = twc.Param('DataSource to use')
+    columns = twc.Variable()
+
+    @classmethod
+    def post_define(cls):
+        if hasattr(cls, 'datasrc'):
+            cls.datasrc = cls.datasrc(parent=cls, id='datasrc')
+
+    def __init__(self, **kw):
+        super(DataTable, self).__init__(**kw)
+        self.datasrc = self.datasrc.req()
+
+    def prepare(self):
+        super(DataTable, self).prepare()
+        self.datasrc.prepare()
+        self.columns = encoder.encode([c.options for c in self.c])
+
+
+class Column(twc.Widget):
+    """A column in a DataTable."""
+    options = twc.Param('Configuration options for the widget. See the YUI docs for available options.', 
+        default={'sortable':True, 'resizeable':True})
+    def prepare(self):
+        super(Column, self).prepare()
+        self.safe_modify('options')
+        self.options['key'] = self.id

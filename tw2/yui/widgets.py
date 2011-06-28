@@ -1,13 +1,7 @@
 """
 ToscaWidgets wrappers for Yahoo User Interface (YUI) widgets.
 """
-import tw2.core as twc, tw2.forms as twf, simplejson, webob, re
-
-def encode_generic(obj):
-    if hasattr(obj, '__json__'):
-        return obj.__json__()
-    raise TypeError(repr(obj) + " is not JSON serializable")
-encoder = simplejson.encoder.JSONEncoder(default=encode_generic)
+import tw2.core as twc, tw2.forms as twf, webob, re
 
 yui_version = '2.9.0'
 
@@ -20,7 +14,7 @@ class YuiWidget(twc.Widget):
     options = twc.Param('Configuration options for the widget. See the YUI docs for available options.', default={})
     def prepare(self):
         super(YuiWidget, self).prepare()
-        self.options = encoder.encode(self.options)
+        self.options = twc.encoder.encode(self.options)
 
 
 class Slider(YuiWidget):
@@ -103,7 +97,7 @@ class XHRDataSource(DataSource):
     @classmethod
     def request(self, req):
         resp = webob.Response(request=req, content_type="application/json; charset=UTF8")
-        resp.body = encoder.encode(self.ajax_request(req))
+        resp.body = twc.encoder.encode(self.ajax_request(req))
         return resp
 
 
@@ -113,7 +107,7 @@ class LocalDataSource(DataSource):
 
     def prepare(self):
         super(LocalDataSource, self).prepare()
-        self.value = encoder.encode(self.value)
+        self.value = tec.encoder.encode(self.value)
 
 
 class ColorPicker(YuiWidget):
@@ -133,7 +127,7 @@ class ColorPicker(YuiWidget):
     def prepare(self):
         self.safe_modify('options')
         if self.value and re.match('^#[0-9a-fA-F]{6}$', self.value):
-            self.rgb = encoder.encode([int(self.value[i:i+2], 16) for i in (1, 3, 5)])
+            self.rgb = twc.encoder.encode([int(self.value[i:i+2], 16) for i in (1, 3, 5)])
         self.options['images'] = {
             'PICKER_THUMB': '/resources/tw2.yui.widgets/static/'+yui_version+'/colorpicker/assets/picker_thumb.png',
             'HUE_THUMB': '/resources/tw2.yui.widgets/static/'+yui_version+'/colorpicker/assets/hue_thumb.png',
@@ -179,7 +173,7 @@ class TreeView(YuiWidget):
     content = twc.Param('Content', default=[])
     def prepare(self):
         super(TreeView, self).prepare()
-        self.content = encoder.encode(self.content)
+        self.content = twc.encoder.encode(self.content)
 
 
 class LogReader(YuiWidget):
@@ -209,8 +203,9 @@ class DataTable(YuiWidget, twc.CompoundWidget):
 
     def prepare(self):
         super(DataTable, self).prepare()
-        self.columns = encoder.encode([c.options for c in self.c])
-        self.value = encoder.encode(self.value)
+        self.columns = twc.encoder.encode([c.options for c in self.c])
+        self.buttons = twc.encoder.encode(dict((c.id, c.link) for c in self.c if isinstance(c, ButtonColumn)))
+        self.value = twc.encoder.encode(self.value)
 
 
 class Column(twc.Widget):
@@ -234,3 +229,18 @@ class Column(twc.Widget):
         self.options['field'] = self.key
         if self.formatter:
             self.options['formatter'] = self.formatter
+
+
+class ButtonColumn(Column):
+    """A Column that contains a button."""
+    sortable = False
+    resizeable = False
+    formatter_tmpl = """function(el,a,b,c,d){
+        el.innerHTML='<button type="button" class="yui-dt-button" id="%s">%s</button>';
+    }"""
+    link = twc.Param('Path that the button takes the user to.')
+
+    def prepare(self):
+        super(ButtonColumn, self).prepare()
+        self.options['formatter'] = twc.JSSymbol(self.formatter_tmpl % (self.id, self.label))
+        self.options['label'] = ''

@@ -4,7 +4,12 @@
 </style>
 <div py:attrs="w.attrs"></div>
 <script type="text/javascript">
-    new YAHOO.widget.DataTable("$w.compound_id",
+    var myDataTable = new YAHOO.widget.DataTable("$w.compound_id",
             $w.columns, new YAHOO.util.LocalDataSource($w.value), $w.options);
+    myDataTable.subscribe("buttonClickEvent", function(oArgs){ 
+        var buttons = $w.buttons;
+        var oRecord = this.getRecord(oArgs.target);
+        window.location = buttons[oArgs.target.id].replace('$', oRecord.getData()['id']);
+    }); 
 </script>
 </div>

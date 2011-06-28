@@ -28,8 +28,4 @@ class DemoAutoComplete(twy.AutoComplete):
 class DemoDataTable(twy.DataTable):
     id = twy.Column()
     name = twy.Column()
-    class datasrc(twy.LocalDataSource):
-        resources = twy.DataSource.resources + [
-            twc.JSLink(modname=__name__, filename="static/sample-data.js"),
-        ]
-        data = 'YAHOO.example.Data.accounts'
+    value = [{'id':1, 'name':'Joe'}, {'id':2, 'name':'Paul'}]

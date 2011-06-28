@@ -83,7 +83,6 @@ class DataSource(YuiWidget):
     resources = [ # don't use YuiWidget.resources
         twc.JSLink(modname=__name__, filename="static/"+yui_version+"/datasource/datasource-min.js"),
     ]
-    responseSchema = twc.Param('TBD', default={'resultsList':'result'})
 
     def prepare(self):
         self.safe_modify('options')
@@ -96,6 +95,7 @@ class XHRDataSource(DataSource):
         twc.JSLink(modname=__name__, filename="static/"+yui_version+"/connection/connection-min.js"),
     ]
     template = "genshi:tw2.yui.templates.xhrdatasource"
+    responseSchema = twc.Param('responseSchema', default={'resultsList':'result'})
     options = {
         'responseType': 3, # YAHOO.util.XHRDataSource.TYPE_JSON
     }
@@ -109,7 +109,7 @@ class XHRDataSource(DataSource):
 
 class LocalDataSource(DataSource):
     template = "genshi:tw2.yui.templates.localdatasource"
-    #data = twc.Param('Name of the JavaScript array to use as the data source')
+    data = twc.Param('Name of the JavaScript array to use as the data source')
 
     def prepare(self):
         super(LocalDataSource, self).prepare()
@@ -204,6 +204,7 @@ class DataTable(YuiWidget, twc.CompoundWidget):
         twc.JSLink(modname=__name__, filename="static/"+yui_version+"/button/button-min.js"),
     ]
     template = "genshi:tw2.yui.templates.datatable"
+    children = twc.Param('Columns for the table. These must be tw2.yui.Column widgets.')
     columns = twc.Variable()
 
     def prepare(self):
@@ -213,13 +214,12 @@ class DataTable(YuiWidget, twc.CompoundWidget):
 
 
 class Column(twc.Widget):
-    """A column in a DataTable."""
-    options = twc.Param('Configuration options for the widget. See the YUI docs for available options.', 
-        default={'sortable':True, 'resizeable':True})
-    sortable = twc.Param(default=True)
-    resizeable = twc.Param(default=True)
-    label = twc.Param(default=twc.Auto)
-    key = twc.Param(default=None)
+    """A column in a DataTable. The TW id becomes the YUI key, and the TW key becomes the YUI field."""
+    options = twc.Param('Configuration options for the widget. See the YUI docs for available options.', default={})
+    sortable = twc.Param('Is the column sortable?', default=True)
+    resizeable = twc.Param('Is the column resizeable?', default=True)
+    label = twc.Param('Label for the field. Auto generates this from the id', default=twc.Auto)
+    formatter = twc.Param('Formatter function. Use a string like "currency" for a YUI built-in, or JSSymbol for a custom function.', default=None)
 
     def prepare(self):
         super(Column, self).prepare()
@@ -230,6 +230,7 @@ class Column(twc.Widget):
         if self.label is twc.Auto:
             self.label = twc.util.name2label(self.id) 
         self.options['label'] = self.label
-        if not self.key:
-            self.key = self.id
-        self.options['key'] = self.key
+        self.options['key'] = self.id
+        self.options['field'] = self.key
+        if self.formatter:
+            self.options['formatter'] = self.formatter

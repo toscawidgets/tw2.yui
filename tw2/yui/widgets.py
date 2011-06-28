@@ -2,7 +2,12 @@
 ToscaWidgets wrappers for Yahoo User Interface (YUI) widgets.
 """
 import tw2.core as twc, tw2.forms as twf, simplejson, webob, re
-encoder = simplejson.encoder.JSONEncoder()
+
+def encode_generic(obj):
+    if hasattr(obj, '__json__'):
+        return obj.__json__()
+    raise TypeError(repr(obj) + " is not JSON serializable")
+encoder = simplejson.encoder.JSONEncoder(default=encode_generic)
 
 yui_version = '2.9.0'
 
@@ -49,7 +54,6 @@ class TabView(twf.widgets.BaseLayout):
 class AutoComplete(twf.TextField, YuiWidget):
     resources = YuiWidget.resources + [
         twc.CSSLink(modname=__name__, filename="static/"+yui_version+"/autocomplete/assets/skins/sam/autocomplete.css"),
-        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/connection/connection-min.js"),
         twc.JSLink(modname=__name__, filename="static/"+yui_version+"/json/json-min.js"),
         twc.JSLink(modname=__name__, filename="static/"+yui_version+"/element/element-min.js"),
         twc.JSLink(modname=__name__, filename="static/"+yui_version+"/animation/animation-min.js"),
@@ -88,6 +92,9 @@ class DataSource(YuiWidget):
 
 
 class XHRDataSource(DataSource):
+    resources = DataSource.resources + [
+        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/connection/connection-min.js"),
+    ]
     template = "genshi:tw2.yui.templates.xhrdatasource"
     options = {
         'responseType': 3, # YAHOO.util.XHRDataSource.TYPE_JSON
@@ -102,7 +109,11 @@ class XHRDataSource(DataSource):
 
 class LocalDataSource(DataSource):
     template = "genshi:tw2.yui.templates.localdatasource"
-    data = twc.Param('Name of the JavaScript array to use as the data source')
+    #data = twc.Param('Name of the JavaScript array to use as the data source')
+
+    def prepare(self):
+        super(LocalDataSource, self).prepare()
+        self.value = encoder.encode(self.value)
 
 
 class ColorPicker(YuiWidget):
@@ -191,32 +202,34 @@ class DataTable(YuiWidget, twc.CompoundWidget):
         twc.JSLink(modname=__name__, filename="static/"+yui_version+"/event-delegate/event-delegate-min.js"),
         twc.JSLink(modname=__name__, filename="static/"+yui_version+"/datatable/datatable-min.js"),
         twc.JSLink(modname=__name__, filename="static/"+yui_version+"/button/button-min.js"),
-        twc.JSLink(modname=__name__, filename="static/"+yui_version+"/connection/connection-min.js"),
     ]
     template = "genshi:tw2.yui.templates.datatable"
-    datasrc = twc.Param('DataSource to use')
     columns = twc.Variable()
-
-    @classmethod
-    def post_define(cls):
-        if hasattr(cls, 'datasrc'):
-            cls.datasrc = cls.datasrc(parent=cls, id='datasrc')
-
-    def __init__(self, **kw):
-        super(DataTable, self).__init__(**kw)
-        self.datasrc = self.datasrc.req()
 
     def prepare(self):
         super(DataTable, self).prepare()
-        self.datasrc.prepare()
         self.columns = encoder.encode([c.options for c in self.c])
+        self.value = encoder.encode(self.value)
 
 
 class Column(twc.Widget):
     """A column in a DataTable."""
     options = twc.Param('Configuration options for the widget. See the YUI docs for available options.', 
         default={'sortable':True, 'resizeable':True})
+    sortable = twc.Param(default=True)
+    resizeable = twc.Param(default=True)
+    label = twc.Param(default=twc.Auto)
+    key = twc.Param(default=None)
+
     def prepare(self):
         super(Column, self).prepare()
         self.safe_modify('options')
-        self.options['key'] = self.id
+        
+        self.options['sortable'] = self.sortable
+        self.options['resizeable'] = self.resizeable
+        if self.label is twc.Auto:
+            self.label = twc.util.name2label(self.id) 
+        self.options['label'] = self.label
+        if not self.key:
+            self.key = self.id
+        self.options['key'] = self.key

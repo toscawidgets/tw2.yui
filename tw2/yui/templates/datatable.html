@@ -3,9 +3,8 @@
   .yui-skin-sam .yui-dt-liner { white-space:nowrap; } 
 </style>
 <div py:attrs="w.attrs"></div>
-${w.datasrc.display()}
 <script type="text/javascript">
     new YAHOO.widget.DataTable("$w.compound_id",
-            $w.columns, tw2_yui_datasources["$w.datasrc.compound_id"], $w.options);
+            $w.columns, new YAHOO.util.LocalDataSource($w.value), $w.options);
 </script>
 </div>
